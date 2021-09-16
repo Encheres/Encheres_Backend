@@ -1,9 +1,26 @@
 var express = require('express');
+const User = require("../models/user");
 var router = express.Router();
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
   res.send('respond with a resource');
 });
+
+router.post("/users", async function(req, res, next) {
+  console.log("Hi");
+	const user = new User(req.body);
+	// console.log(req.body);
+	try {
+		await user.save();
+		const token = await user.generateAuthToken();
+		res.status(201).send({ user, token });
+	} catch (e) {
+    console.log(e);
+		res.status(400).send(e);
+	}
+});
+
+
 
 module.exports = router;
