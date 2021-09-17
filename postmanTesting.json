@@ -1,0 +1,35 @@
+{
+    "tags": [
+        "Real estate",
+        "Antiques",
+        "Hosuing"
+    ],
+    "pickup_point": {
+        "addressLine1": "abc",
+        "city": "def",
+        "state": "ghi",
+        "country": "jkl",
+        "postalCode": "mno"
+    },
+    "organizer_contact": 123456,
+    "items": [
+        {
+            "name": "tomato",
+            "aggregate_base_price": 20,
+            "description": "this is good very good item",
+            "images": [
+                "abc.com",
+                "xyz.com"
+            ]
+        },
+        {
+            "name": "potato",
+            "aggregate_base_price": 20,
+            "description": "this is good very good item",
+            "images": [
+                "abc.com",
+                "xyz.com"
+            ]
+        }
+    ]
+}
