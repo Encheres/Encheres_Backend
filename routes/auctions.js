@@ -91,4 +91,20 @@ router.route('/auctions/:auctionId')
 
 })
 
+// For getting a particular item.
+router.route('/auctions/:auctionId/:itemId')
+.get(async (req, res, next) => {
+    try {
+        var auction = await Auction.findById(req.params.auctionId);
+        console.log(auction);
+        var item = auction.items.id(req.params.itemId);
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'application/json');
+        res.json(item);
+
+    } catch (error) {
+        next(error);
+    }
+})
+
 module.exports = router;
