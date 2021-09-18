@@ -56,7 +56,7 @@ const userSchema = new mongoose.Schema(
             default: 0,
         },
 		image: {
-			type: Buffer,
+			type: String,// url
 		},
 		tokens: [
 			{
