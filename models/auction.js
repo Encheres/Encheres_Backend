@@ -65,11 +65,19 @@ const auctionSchema = new mongoose.Schema(
         quantity: {
             type: String,
             required: true,
-            default: 1
+            default: 1,
+            validate(value){
+                if(value < 0)
+                    throw new Error("Quantity Can't be negative")
+            }
         },
         aggregate_base_price: {
             type: Number,
-            required: true
+            required: true,
+            validate(value){
+                if(value < 0)
+                    throw new Error("Price Can't be negative")
+            }
         },
         description: {
             type: String,
