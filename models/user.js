@@ -98,29 +98,15 @@ const userSchema = new mongoose.Schema(
                 required:true
             }
         }],
-        /*
-        my_winnings:[{
-            
-            // need to confirm this
-            auction_id:{
-                type:mongoose.Schema.Types.ObjectId,
-                ref: "Auction",
-            },
-            item_id:{
-                type:mongoose.Schema.Types.ObjectId,
-                ref:"Auction",
-
-            },
-            win_price:{
-                type:Number,
-                trim: true,
-            },
-            seller_details:{
-                type:mongoose.Schema.Types.ObjectId,
-                ref: "User",
-            }
-        }]*/
-        
+		bookmarked_auctions: [
+			// bookmark upcoming auctions
+			{
+				auction_id:{
+					type: mongoose.Schema.Types.ObjectId,
+					ref: "Auction",
+				},
+			}
+		],
     },{ timestamps: true }
 );
 
