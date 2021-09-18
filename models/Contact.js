@@ -1,5 +1,5 @@
 const moongoose = require("mongoose");
-
+const validator = require("validator");
 const schema = {
   Email: {
     type: String,
@@ -11,6 +11,13 @@ const schema = {
       /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
       "Please fill a valid email address",
     ],
+    required: true,
+    lowercase: true,
+    validate(value) {
+      if (!validator.isEmail(value)) {
+        throw new Error("Email is invalid");
+      }
+    },
   },
   Name: {
     type: String,
