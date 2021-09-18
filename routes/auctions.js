@@ -10,7 +10,7 @@ router.route('/filtered-auctions')
     const page = parseInt(req.query.page || "0");
 
     try{
-        var auctions = await Auction.find({"tags" : { $in: req.query.tags.split(',')}})
+        var auctions = await Auction.find({"tags" : { $in: req.query.tags.split(',')}, completed: false})
         .sort({'event_date_time':1}).limit(PAGE_SIZE).skip(PAGE_SIZE*page);
 
         res.statusCode = 200;
@@ -30,7 +30,7 @@ router.route('/auctions')
     const page = parseInt(req.query.page || "0");
 
     try{
-        var auctions = await Auction.find({})
+        var auctions = await Auction.find({completed: false})
         .sort({'event_date_time':1}).limit(PAGE_SIZE).skip(PAGE_SIZE*page);
 
         res.statusCode = 200;
@@ -103,6 +103,45 @@ router.route('/auctions/:auctionId/:itemId')
         res.json(item);
 
     } catch (error) {
+        next(error);
+    }
+})
+
+// Completed Auctions.
+router.route('/completed-filtered-auctions')
+.get(async (req, res, next) => {
+
+    const PAGE_SIZE = 5;
+    const page = parseInt(req.query.page || "0");
+
+    try{
+        var auctions = await Auction.find({"tags" : { $in: req.query.tags.split(',')}, completed: true})
+        .sort({'event_date_time':1}).limit(PAGE_SIZE).skip(PAGE_SIZE*page);
+
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'application/json');
+        res.json(auctions);
+    }
+    catch (error) {
+        next(error);
+    }
+})
+
+router.route('/completed-auctions')
+.get(async (req, res, next) => {
+
+    const PAGE_SIZE = 5;
+    const page = parseInt(req.query.page || "0");
+
+    try{
+        var auctions = await Auction.find({completed: true})
+        .sort({'event_date_time':1}).limit(PAGE_SIZE).skip(PAGE_SIZE*page);
+
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'application/json');
+        res.json(auctions);
+    }
+    catch (error) {
         next(error);
     }
 })

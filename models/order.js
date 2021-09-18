@@ -1,5 +1,32 @@
 const mongoose = require('mongoose');
 
+const addressSchema = new mongoose.Schema({
+    addressLine1:{
+        type:String,
+        trim: true,
+    },
+    addressLine2:{
+        type:String,
+        trim: true
+    },
+    city:{
+        type:Object,
+        trim: true,
+    },
+    state:{
+        type:String,
+        trim: true,
+    },
+    postalCode:{
+        type:String,
+        trim: true,
+    },
+    country:{
+        type:String,
+        trim: true,
+    }
+})
+
 const orderSchema = new mongoose.Schema({
     auction_id: {
         type: mongoose.Schema.Types.ObjectId,
@@ -27,37 +54,7 @@ const orderSchema = new mongoose.Schema({
             type: Number,
             required: true
         },
-        address: {
-            addressLine1:{
-                type:String,
-                trim: true,
-                required: true,
-            },
-            addressLine2:{
-                type:String,
-                trim: true
-            },
-            city:{
-                type:Object,
-                trim: true,
-                required: true,
-            },
-            state:{
-                type:String,
-                trim: true,
-                required: true,
-            },
-            postalCode:{
-                type:String,
-                trim: true,
-                required: true
-            },
-            country:{
-                type:String,
-                trim: true,
-                required:true
-            }
-        }
+        address: addressSchema
     },
     buyer_details: {
         profile: {
@@ -67,39 +64,8 @@ const orderSchema = new mongoose.Schema({
         },
         contact_number: {
             type: Number,
-            required: true
         },
-        address: {
-            addressLine1:{
-                type:String,
-                trim: true,
-                required: true,
-            },
-            addressLine2:{
-                type:String,
-                trim: true
-            },
-            city:{
-                type:Object,
-                trim: true,
-                required: true,
-            },
-            state:{
-                type:String,
-                trim: true,
-                required: true,
-            },
-            postalCode:{
-                type:String,
-                trim: true,
-                required: true
-            },
-            country:{
-                type:String,
-                trim: true,
-                required:true
-            }
-        }
+        address: addressSchema
     },
     payment_id: {
         type: String,
@@ -113,8 +79,9 @@ const orderSchema = new mongoose.Schema({
     tracking_details: {
         type: String,
         trim: true
-    }
-})
+    }},
+    {timestamps: true}
+)
 
 const Order = mongoose.model('Order', orderSchema);
 module.exports = Order;

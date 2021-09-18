@@ -10,6 +10,7 @@ require('./db/mongoose');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var auctionsRouter = require('./routes/auctions');
+var orderRouter = require('./routes/orders');
 
 var app = express();
 
@@ -26,6 +27,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use(auctionsRouter);
+app.use(orderRouter);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
