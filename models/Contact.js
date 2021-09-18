@@ -18,8 +18,16 @@ const schema = {
     unique: true,
     trim: true,
   },
-  Category: {},
-  Description: {},
+  Category: {
+    Complaint: { type: Boolean, default: false },
+    Feedback: { type: Boolean, default: false },
+    Help: { type: Boolean, default: false },
+  },
+  Description: {
+    type: String,
+    maxLength: 250,
+    required: true,
+  },
 };
 
 const contactSchema = new moongoose.Schema(schema);
