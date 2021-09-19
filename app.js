@@ -12,6 +12,7 @@ var usersRouter = require('./routes/users');
 var auctionsRouter = require('./routes/auctions');
 var orderRouter = require('./routes/orders');
 var biddingRouter = require('./routes/current_biddings');
+var ContactUsRouter = require('./routes/contactus');
 
 var app = express();
 
@@ -30,22 +31,22 @@ app.use('/users', usersRouter);
 app.use(auctionsRouter);
 app.use(orderRouter);
 app.use(biddingRouter);
-
+app.use('/contact-us', ContactUsRouter)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-  next(createError(404));
+    next(createError(404));
 });
 
 // error handler
 app.use(function(err, req, res, next) {
-  // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+    // set locals, only providing error in development
+    res.locals.message = err.message;
+    res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-  // render the error page
-  res.status(err.status || 500);
-  res.render('error');
+    // render the error page
+    res.status(err.status || 500);
+    res.render('error');
 });
 
 module.exports = app;
