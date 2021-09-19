@@ -23,7 +23,7 @@ const currentBiddingSchema = new mongoose.Schema({
         },
     },
     current_price:{
-        type: Double,
+        type: Number,
         required: true
     }
 }, {timeStamp: true});
