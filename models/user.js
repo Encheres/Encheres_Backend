@@ -98,13 +98,14 @@ const userSchema = new mongoose.Schema(
                 required:true
             }
         }],
-		bookmarked_auctions: [
+		bookmarked_auctions: [{
 			// bookmark upcoming auctions
-			{
+			
 				auction_id:{
 					type: mongoose.Schema.Types.ObjectId,
 					ref: "Auction",
-				},
+					unique: true,
+				}
 			}
 		],
     },{ timestamps: true }
