@@ -34,7 +34,7 @@ router.post("/current_biddings", async (req, res) => {
   try {
 
     var bid = new CurrentBidding(req.body);
-    bid.save();
+    await bid.save();
     res.statusCode = 200;
     res.setHeader('Content-Type', 'application/json');
     res.json(bid);
