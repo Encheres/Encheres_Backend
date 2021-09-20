@@ -6,11 +6,11 @@ const Pusher = require("pusher");
 
 
 const pusher = new Pusher({
-  appId: "BE9DB2C408F464B93EB215EA6405E362EE6816E49458386217333B1E1F6D738D",
-  key: "77BB0E8F27E663609FB2885C2C941595317C66D56AF282C4F0DA6C89B6201F9B",
-  secret: "CB062A1E9B47D54AD3FAAC894A71A359C62F28BBB52CF2B1E82ED853F4775CD3",
+  appId: `${process.env.PUSHER_APP_ID}`,
+  key: `${process.env.PUSHER_KEY}`,
+  secret: `${process.env.PUSHER_SECRET}`,
   cluster: "ap2",
-  useTLS: true,
+  useTLS: true
 });
 
 const db = mongoose.connection;
