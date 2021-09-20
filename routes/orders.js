@@ -2,9 +2,11 @@ const express = require('express');
 const Order = require('../models/order');
 var router = express.Router();
 
+const auth = require('../middleware/auth');
+
 // Creating new order.
 router.route('/orders')
-.post(async (req, res, next) => {
+.post(auth, async (req, res, next) => {
     try {
 
         var order = new Order(req.body);
@@ -19,7 +21,7 @@ router.route('/orders')
 
 // CRUD on particular order.
 router.route('/orders/:orderId')
-.get(async (req, res, next) => {
+.get(auth, async (req, res, next) => {
     try {
         var orders = await Order.find({'_id': req.params.orderId});
         res.statusCode = 200;
@@ -30,7 +32,7 @@ router.route('/orders/:orderId')
         next(error);
     }
 })
-.put(async (req, res, next) => {
+.put(auth, async (req, res, next) => {
 
     try {
         var order = await Order.findByIdAndUpdate(req.params.orderId, 
@@ -45,7 +47,7 @@ router.route('/orders/:orderId')
         next(error);
     }
 })
-.delete(async (req, res, next) => {
+.delete(auth, async (req, res, next) => {
 
     try {
 		var operation = await Order.deleteOne({"_id": req.params.orderId});
@@ -58,7 +60,7 @@ router.route('/orders/:orderId')
 
 // pending orders (Buyer side).
 router.route('/buyer-pending-orders/:buyerId')
-.get(async (req, res, next) => {
+.get(auth, async (req, res, next) => {
 
     const PAGE_SIZE = 5;
     const page = parseInt(req.query.page || "0");
@@ -81,7 +83,7 @@ router.route('/buyer-pending-orders/:buyerId')
 
 // pending orders (Seller side).
 router.route('/seller-pending-orders/:sellerId')
-.get(async (req, res, next) => {
+.get(auth, async (req, res, next) => {
 
     const PAGE_SIZE = 5;
     const page = parseInt(req.query.page || "0");
@@ -104,7 +106,7 @@ router.route('/seller-pending-orders/:sellerId')
 
 // shipped orders (Buyer side).
 router.route('/buyer-shipped-orders/:buyerId')
-.get(async (req, res, next) => {
+.get(auth, async (req, res, next) => {
 
     const PAGE_SIZE = 5;
     const page = parseInt(req.query.page || "0");
@@ -127,7 +129,7 @@ router.route('/buyer-shipped-orders/:buyerId')
 
 // shipped orders (Seller side).
 router.route('/seller-shipped-orders/:sellerId')
-.get(async (req, res, next) => {
+.get(auth, async (req, res, next) => {
 
     const PAGE_SIZE = 5;
     const page = parseInt(req.query.page || "0");

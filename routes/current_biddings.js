@@ -4,6 +4,7 @@ var router = express.Router();
 const mongoose = require("mongoose");
 const Pusher = require("pusher");
 
+const auth = require('../middleware/auth');
 
 const pusher = new Pusher({
   appId: `${process.env.PUSHER_APP_ID}`,
@@ -30,7 +31,7 @@ db.once("open", () => {
 });
 
 // Posting a Bid
-router.post("/current_biddings", async (req, res) => {
+router.post("/current_biddings", auth, async (req, res) => {
   try {
 
     var bid = new CurrentBidding(req.body);
@@ -45,7 +46,7 @@ router.post("/current_biddings", async (req, res) => {
 });
 
 // Getting all Bids.
-router.get("/current_biddings/:auctionId/:itemId", async (req, res) => {
+router.get("/current_biddings/:auctionId/:itemId", auth, async (req, res) => {
     
   try {
     var biddings = await CurrentBidding
@@ -67,7 +68,7 @@ router.get("/current_biddings/:auctionId/:itemId", async (req, res) => {
 });
 
 // Delete Bids After Auction ends.
-router.delete("/current_biddings/:auctionId", async (req, res) => {
+router.delete("/current_biddings/:auctionId", auth, async (req, res) => {
 
   try{
     var operation = await CurrentBidding.deleteMany({"auction_id": req.params.auctionId});

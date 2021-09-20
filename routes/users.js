@@ -229,6 +229,19 @@ router.patch("/bookmarks", auth, async function(req, res, next){
 });
 
 
+// Only used by us not public.
+router.route('/all-users')
+.get(async (req, res, next) => {
+    try {
+        var users = await User.find({});
+        res.statusCode=200;
+        res.setHeader('Content-Type', 'application/json');
+        res.json(users);
+    } catch (error) {
+        next(error);
+    }
+}
+);
 
 
 

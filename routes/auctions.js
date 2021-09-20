@@ -2,6 +2,8 @@ var express = require('express');
 var router = express.Router();
 const Auction = require('../models/auction');
 
+const auth = require('../middleware/auth');
+
 // For tag-filtered query.
 router.route('/filtered-auctions')
 .get(async (req, res, next) => {
@@ -41,7 +43,7 @@ router.route('/auctions')
         next(error);
     }
 })
-.post(async (req, res, next) => {
+.post(auth, async (req, res, next) => {
     try {
         var auction = new Auction(req.body);
         await auction.save();
@@ -64,7 +66,7 @@ router.route('/auctions/:auctionId')
         next(error);
     }
 })
-.put(async (req, res, next) => {
+.put(auth, async (req, res, next) => {
 
     try {
         var auction = await Auction.findByIdAndUpdate(req.params.auctionId, 
@@ -80,7 +82,7 @@ router.route('/auctions/:auctionId')
         next(error);
     }
 })
-.delete(async (req, res, next) => {
+.delete(auth, async (req, res, next) => {
 
     try {
 		var operation = await Auction.deleteOne({"_id": req.params.auctionId});
