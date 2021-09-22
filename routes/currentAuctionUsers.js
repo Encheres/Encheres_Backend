@@ -18,13 +18,12 @@ const pusher = new Pusher({
 */
 const db = mongoose.connection
 
-router.post('enter', async(res, req, next) => {
+router.post('enter', auth, async(res, req, next) => {
     try {
         console.log('enter');
         var entry = model(req.body)
         await entry.save()
-            /*  Pusher.trigger('currentUsers', 'enter', { message: "new user entered" })
-             */
+        Pusher.trigger('currentUsers', 'enter', { message: "new user entered" })
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');
         res.json("successfully entered");
@@ -32,7 +31,7 @@ router.post('enter', async(res, req, next) => {
         console.log(err)
     }
 })
-router.route('/exit/:userid/:auction_id/:itemId').delete(auth, (res, req, next) => {
+router.delete('/exit/:userid/:auction_id/:itemId', auth, (res, req, next) => {
     try {
         console.log('exit')
         var first = { "auction_id": req.params.auction_id, "itemId": req.params.itemId };
