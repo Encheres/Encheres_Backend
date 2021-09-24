@@ -1,15 +1,9 @@
 const moongoose = require("mongoose");
 const validator = require("validator");
 const schema = {
-  Email: {
+  email: {
     type: String,
     trim: true,
-    unique: true,
-    required: true,
-    match: [
-      /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
-      "Please fill a valid email address",
-    ],
     required: true,
     lowercase: true,
     validate(value) {
@@ -18,21 +12,21 @@ const schema = {
       }
     },
   },
-  Name: {
+  name: {
     type: String,
     required: true,
-    unique: true,
     trim: true,
   },
-  Category: {
-    Complaint: { type: Boolean, default: false },
-    Feedback: { type: Boolean, default: false },
-    Help: { type: Boolean, default: false },
-  },
-  Description: {
-    type: String,
-    maxLength: 250,
+  category: {
+    // can be one from {'Complaint', 'Feedback', 'Help'} // can be wtitten on frontend
+    type: String, 
     required: true,
+    trim: true,
+  },
+  description: {
+    type: String,
+    required: true,
+    trim: true,
   },
 };
 
