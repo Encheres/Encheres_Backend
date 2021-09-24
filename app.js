@@ -31,7 +31,7 @@ app.use('/users', usersRouter);
 app.use(auctionsRouter);
 app.use(orderRouter);
 app.use(biddingRouter);
-app.use('/contact-us', ContactUsRouter)
+app.use('/contactUs', ContactUsRouter)
 app.use('/currentAuction', currentAuctionUserRouter)
 
 // catch 404 and forward to error handler
