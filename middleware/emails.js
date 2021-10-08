@@ -2,7 +2,6 @@ const sgMail = require('@sendgrid/mail')
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 const sendPasswordResetEmail = (email, name, url) =>{
-    // TO DO: Change this to a real email address and add a template
     sgMail.send({
         to:email,
         from:process.env.SENDER_EMAIL,

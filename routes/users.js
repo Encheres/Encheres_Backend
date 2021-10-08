@@ -119,9 +119,9 @@ router.post('/forgot_password', async(req, res)=>{
         const secret = process.env.JWT_SECRET_TOKEN_ENCRYPTION_KEY + user.password
         const payload = {email: user.email, id: user._id}
         const token = jwt.sign(payload, secret, {expiresIn:'15m'})
-        // const link = `${process.env.FRONTEND_URL}/reset_password/${user.id}/${token}`
-        // sendPasswordResetEmail(user.email, user.name, link);
-        // res.send({message:"Password reset link has been sent on your email id. It's valid for 15 minutes only."})
+        const link = `${process.env.FRONTEND_URL}/reset_password/${user.id}/${token}`
+        sendPasswordResetEmail(user.email, user.name, link);
+        res.send({message:"Password reset link has been sent on your email id. It's valid for 15 minutes only."})
 
     }
     catch(e){
@@ -248,17 +248,11 @@ router.route('/all-users')
 /*
 // Routes needed to build
 1) Update Profile // almost done (discuss: should we send email on email update?)
-2) Forgot Password // almost done
-3) Sending Email -> Account creation (due to addition of account), auction winning/transaction, 
-password reset, etc.
-
-4) Upload, get, delete User Image -> another db
-5) User winnings
-6) User Bookmarks -- done
-7) User pending Orders // already implemented
-8) Modify account details ->email sending
-9) Add/ remove bookmarks -- done
-10) Reputation
+2) Sending Email -> Account creation (due to addition of account), auction winning/transaction, etc.
+3) Upload, get, delete User Image -> another db
+4) User winnings
+5) Modify account details ->email sending
+6) Reputation
 */ 	
 
 
