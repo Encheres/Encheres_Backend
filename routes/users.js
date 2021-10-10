@@ -6,12 +6,6 @@ const auth = require('../middleware/auth');
 const jwt = require('jsonwebtoken');
 const {sendPasswordResetEmail} = require('../middleware/emails');
 
-/* GET users listing.           --- To be deleted*/
-// router.get('/', function(req, res, next) {
-//   res.send('respond with a resource');
-// });
-
-
 /*-----------------------------------------------------*/
 /* AUTHENTICATION RELATED */
 /*-----------------------------------------------------*/
@@ -24,7 +18,6 @@ router.post("/signup", async function(req, res, next) {
 		const token = await user.generateAuthToken();
 		res.status(201).send({ user, token });
 	} catch (e) {
-    console.log(e);
 		res.status(400).send(e);
 	}
 });
