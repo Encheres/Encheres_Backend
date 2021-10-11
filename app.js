@@ -10,6 +10,7 @@ require('./db/mongoose');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var auctionsRouter = require('./routes/auctions');
+var itemsRouter = require('./routes/items');
 var orderRouter = require('./routes/orders');
 var biddingRouter = require('./routes/current_biddings');
 var ContactUsRouter = require('./routes/contactus');
@@ -29,6 +30,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use(auctionsRouter);
+app.use(itemsRouter);
 app.use(orderRouter);
 app.use(biddingRouter);
 app.use('/contact-us', ContactUsRouter)
