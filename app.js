@@ -14,6 +14,7 @@ var auctionsRouter = require('./routes/auctions');
 var itemsRouter = require('./routes/items');
 var orderRouter = require('./routes/orders');
 var biddingRouter = require('./routes/current_biddings');
+var independentItemBiddingRouter = require('./routes/independent_item_current_biddings');
 var ContactUsRouter = require('./routes/contactus');
 const currentAuctionUserRouter = require('./routes/currentAuctionUsers')
 var app = express();
@@ -35,6 +36,7 @@ app.use(auctionsRouter);
 app.use(itemsRouter);
 app.use(orderRouter);
 app.use(biddingRouter);
+app.use(independentItemBiddingRouter);
 app.use('/contactUs', ContactUsRouter)
 app.use('/currentAuction', currentAuctionUserRouter)
 
