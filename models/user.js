@@ -6,12 +6,6 @@ const jwt = require("jsonwebtoken");
 
 const userSchema = new mongoose.Schema(
 	{
-		user_name: {
-			type: String,
-			required: true,
-			unique: true,
-			trim: true,
-		},
 		name: {
 			type: String,
 			required: true,
@@ -20,6 +14,7 @@ const userSchema = new mongoose.Schema(
         anonymous_name:{
             type: String,
             trim: true,
+			required: true,
         },
 		email: {
 			type: String,
@@ -37,19 +32,13 @@ const userSchema = new mongoose.Schema(
 			type: String,
 			required: true,
 			trim: true,
+			minlength: 6,
 		},
-		accounts: {
-			account_id: {
+		accounts: [{
 				type: String,
-				trim: true,
                 required: true,
-			},
-			private_key: {
-				type: String,
-				trim: true,
-                required: true,
-			},
-		},
+			}
+		],
         reputation:{
             type: Number,
 			trim: true,
@@ -82,7 +71,7 @@ const userSchema = new mongoose.Schema(
                 trim: true,
                 required: true,
             },
-            state:{
+            addressState:{
                 type:String,
                 trim: true,
                 required: true,
@@ -103,8 +92,7 @@ const userSchema = new mongoose.Schema(
 			
 				auction_id:{
 					type: mongoose.Schema.Types.ObjectId,
-					ref: "Auction",
-					unique: true,
+					ref: "Auction"
 				}
 			}
 		],

@@ -6,12 +6,6 @@ const auth = require('../middleware/auth');
 const jwt = require('jsonwebtoken');
 const {sendPasswordResetEmail} = require('../middleware/emails');
 
-/* GET users listing.           --- To be deleted*/
-// router.get('/', function(req, res, next) {
-//   res.send('respond with a resource');
-// });
-
-
 /*-----------------------------------------------------*/
 /* AUTHENTICATION RELATED */
 /*-----------------------------------------------------*/
@@ -24,7 +18,6 @@ router.post("/signup", async function(req, res, next) {
 		const token = await user.generateAuthToken();
 		res.status(201).send({ user, token });
 	} catch (e) {
-    console.log(e);
 		res.status(400).send(e);
 	}
 });
@@ -37,6 +30,7 @@ router.post('/login',async(req,res)=>{
         res.send({user,token})
     }
     catch(e){
+
         res.status(400).send('Details Mismatched');                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
     }
 })
@@ -112,21 +106,21 @@ router.post('/forgot_password', async(req, res)=>{
         const email = req.body.email;
         const user = await User.findOne({email: email})
         if(!user){
-            res.status(401).send({message:"No user with this email id exists"})
+            res.status(401).send({message:"No user with this email id exists. Please check your email and try again."})
             return
         }
         
         const secret = process.env.JWT_SECRET_TOKEN_ENCRYPTION_KEY + user.password
         const payload = {email: user.email, id: user._id}
         const token = jwt.sign(payload, secret, {expiresIn:'15m'})
-        // const link = `${process.env.FRONTEND_URL}/reset_password/${user.id}/${token}`
-        // sendPasswordResetEmail(user.email, user.name, link);
-        // res.send({message:"Password reset link has been sent on your email id. It's valid for 15 minutes only."})
+        const link = `${process.env.FRONTEND_URL}/reset_password/${user.id}/${token}`
+        sendPasswordResetEmail(user.email, user.name, link);
+        res.send({message:"Password reset link has been sent on your email id. It's valid for 15 minutes only."})
 
     }
     catch(e){
         console.log(e);
-        res.send({message:"Operation unsucessfull"})
+        res.send({message:"Something went wrong"})
 
     }
 });
@@ -248,17 +242,11 @@ router.route('/all-users')
 /*
 // Routes needed to build
 1) Update Profile // almost done (discuss: should we send email on email update?)
-2) Forgot Password // almost done
-3) Sending Email -> Account creation (due to addition of account), auction winning/transaction, 
-password reset, etc.
-
-4) Upload, get, delete User Image -> another db
-5) User winnings
-6) User Bookmarks -- done
-7) User pending Orders // already implemented
-8) Modify account details ->email sending
-9) Add/ remove bookmarks -- done
-10) Reputation
+2) Sending Email -> Account creation (due to addition of account), auction winning/transaction, etc.
+3) Upload, get, delete User Image -> another db
+4) User winnings
+5) Modify account details ->email sending
+6) Reputation
 */ 	
 
 
