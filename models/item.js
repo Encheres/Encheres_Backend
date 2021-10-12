@@ -95,7 +95,7 @@ const itemSchema = new mongoose.Schema(
             },
             images: [{
                 type: String,
-                //required: true
+                required: true
             }],
             video: {
                 type: String

@@ -15,7 +15,7 @@ var itemsRouter = require('./routes/items');
 var orderRouter = require('./routes/orders');
 var biddingRouter = require('./routes/current_biddings');
 var ContactUsRouter = require('./routes/contactus');
-const currentAuctionUserRouter = require('./routes/currentAuctionUsers')
+const currentAuctionUserRouter = require('./routes/currentAuctionUsers');
 var app = express();
 
 // view engine setup
