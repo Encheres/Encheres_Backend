@@ -241,12 +241,10 @@ router.route('/all-users')
 
 /*
 // Routes needed to build
-1) Update Profile // almost done (discuss: should we send email on email update?)
-2) Sending Email -> Account creation (due to addition of account), auction winning/transaction, etc.
-3) Upload, get, delete User Image -> another db
-4) User winnings
-5) Modify account details ->email sending
-6) Reputation
+1) Sending Email -> Account creation (due to addition of account), auction winning/transaction, etc.
+2) Upload, get, delete User Image -> another db
+3) User winnings
+4) Reputation
 */ 	
 
 

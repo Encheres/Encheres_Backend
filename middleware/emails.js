@@ -22,6 +22,32 @@ const sendPasswordResetEmail = (email, name, url) =>{
     });
 }
 
+const sendContactUsEmail = async(data) =>{
+    try{
+        const response = await sgMail.send({
+            to:process.env.SENDER_EMAIL,
+            from:process.env.SENDER_EMAIL,
+            templateId:process.env.CONTACT_US_EMAIL_TEMPELATE,
+            personalizations:[{
+                to:process.env.SENDER_EMAIL,
+                dynamicTemplateData:{
+                    subject:"Contact User",
+                    name:data.name,
+                    email:data.email,
+                    req_type:data.category,
+                    message:data.description,
+                }
+            }],
+        })
+    }catch(error){
+        const errorMessage = error.response.body.errors[0].message;
+        console.log(errorMessage);
+        throw new Error(errorMessage);
+        
+    }
+}
+
 module.exports = {
-    sendPasswordResetEmail
+    sendPasswordResetEmail,
+    sendContactUsEmail
 }
