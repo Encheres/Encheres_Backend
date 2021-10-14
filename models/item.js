@@ -3,6 +3,10 @@ const mongoose = require("mongoose");
 
 const itemSchema = new mongoose.Schema(
     {
+        bidder: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User"
+        },
         categories: {
             type: [String],
             required: true
@@ -60,7 +64,8 @@ const itemSchema = new mongoose.Schema(
         },
         owner: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "User"
+            ref: "User",
+            required: true
         },
         owner_contact: {
             type: Number,

@@ -12,7 +12,7 @@ router.route('/filtered-items')
     const page = parseInt(req.query.page || "0");
 
     try{
-        var items = await Item.find({"categories" : { $in: req.query.tags.split(',')}, sale: true, bids: true})
+        var items = await Item.find({event_start_date_time : { $lte: new Date() }, "categories" : { $in: req.query.tags.split(',')}, sale: true})
         .sort({'event_start_end_time':1}).limit(PAGE_SIZE).skip(PAGE_SIZE*page);
 
         res.statusCode = 200;
@@ -32,7 +32,7 @@ router.route('/items')
     const page = parseInt(req.query.page || "0");
 
     try{
-        var items = await Item.find({sale: true, bids: true})
+        var items = await Item.find({ event_start_date_time : { $lte: new Date() }, sale: true})
         .sort({'event_end_date_time':1}).limit(PAGE_SIZE).skip(PAGE_SIZE*page);
 
         res.statusCode = 200;
@@ -43,7 +43,8 @@ router.route('/items')
         next(error);
     }
 })
-.post(auth, async (req, res, next) => {
+.post(async (req, res, next) => {
+
     try {
         var item = new Item(req.body);
         await item.save();
@@ -69,14 +70,23 @@ router.route('/items/:itemId')
 .put(auth, async (req, res, next) => {
 
     try {
-        var item = await Item.findByIdAndUpdate(req.params.itemId, 
-            {$set: req.body}, 
-            {new: true});
-        
-        console.log('Sucess!!');
-        res.statusCode = 200;
-        res.setHeader('Content-Type', 'application/json');
-        res.json(item);
+        var oldItem = await Item.findById(req.params.itemId);
+
+        /******** BACKEND AVOIDANCE TO ALLOW ONLY HIGHER BIDS *******/
+        if(req.body.asset.aggregate_base_price <= oldItem.asset.aggregate_base_price){
+            res.statusCode = 400;
+            res.setHeader('Content-Type', 'application/json');
+            res.json("It seems someone raised the bar of item price. Stay tuned and Bid even higher!!");
+        }
+        else{
+            var item = await Item.findByIdAndUpdate(req.params.itemId, 
+                {$set: req.body}, 
+                {new: true});
+            
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'application/json');
+            res.json(item);
+        }
 
     } catch (error) {
         next(error);
@@ -101,7 +111,7 @@ router.route('/sold-filtered-items')
     const page = parseInt(req.query.page || "0");
 
     try{
-        var items = await Item.find({"tags" : { $in: req.query.tags.split(',')}, sale: false, bids: true})
+        var items = await Item.find({event_start_date_time : { $lte: new Date() }, "categories" : { $in: req.query.tags.split(',')}, sale: false})
         .sort({'event_start_end_time':1}).limit(PAGE_SIZE).skip(PAGE_SIZE*page);
 
         res.statusCode = 200;
@@ -120,7 +130,7 @@ router.route('/sold-items')
     const page = parseInt(req.query.page || "0");
 
     try{
-        var items = await Item.find({sale: false, bids: true})
+        var items = await Item.find({event_start_date_time : { $lte: new Date() }, sale: false})
         .sort({'event_start_end_time':1}).limit(PAGE_SIZE).skip(PAGE_SIZE*page);
 
         res.statusCode = 200;
