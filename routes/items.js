@@ -74,9 +74,10 @@ router.route('/items/:itemId')
 
         /******** BACKEND AVOIDANCE TO ALLOW ONLY HIGHER BIDS *******/
         if(req.body.asset.aggregate_base_price <= oldItem.asset.aggregate_base_price){
-            res.statusCode = 400;
-            res.setHeader('Content-Type', 'application/json');
-            res.json("It seems someone raised the bar of item price. Stay tuned and Bid even higher!!");
+
+            err = new Error();
+            err.status = 400;
+            return next(err);  
         }
         else{
             var item = await Item.findByIdAndUpdate(req.params.itemId, 
