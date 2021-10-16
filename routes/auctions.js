@@ -45,7 +45,7 @@ router.route('/auctions')
         try {
             var auction = new Auction(req.body);
             await auction.save();
-            res.status(200).json(auction);
+            res.status(200).json({message:"Auction created Successfully"});
         } catch (error) {
             next(error);
         }
