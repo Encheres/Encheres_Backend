@@ -6,29 +6,6 @@ const Pusher = require("pusher");
 
 const auth = require('../middleware/auth');
 
-const pusher = new Pusher({
-    appId: `${process.env.PUSHER_APP_ID}`,
-    key: `${process.env.PUSHER_KEY}`,
-    secret: `${process.env.PUSHER_SECRET}`,
-    cluster: "ap2",
-    useTLS: true
-});
-
-const db = mongoose.connection;
-
-db.once("open", () => {
-    const bidCollection = db.collection("currentbiddings");
-    const changeStream = bidCollection.watch();
-    changeStream.on("change", (change) => {
-        if (change.operationType === "insert") {
-            const bidDetails = change.fullDocument;
-            pusher.trigger("biddings", "inserted", { msg: "New Bid added!" });
-        } else {
-            console.log("Pusher error");
-        }
-    });
-});
-
 // Posting a Bid
 router.post("/current_biddings", auth, async(req, res) => {
     try {

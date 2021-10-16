@@ -1,8 +1,33 @@
 var express = require('express');
 var router = express.Router();
+const mongoose = require("mongoose");
 const Item = require("../models/item");
+const Pusher = require("pusher");
 
 const auth = require('../middleware/auth');
+
+const pusher = new Pusher({
+    appId: `${process.env.PUSHER_APP_ID}`,
+    key: `${process.env.PUSHER_KEY}`,
+    secret: `${process.env.PUSHER_SECRET}`,
+    cluster: "ap2",
+    useTLS: true
+});
+
+const db = mongoose.connection;
+
+db.once("open", () => {
+    const itemCollection = db.collection("items");
+    const changeStream = itemCollection.watch();
+    changeStream.on("change", (change) => {
+        if (change.operationType === "update") {
+            const bidDetails = change.fullDocument;
+            pusher.trigger("biddings", "updated", { msg: "New Bid added!" });
+        } else {
+            console.log("Pusher error");
+        }
+    });
+});
 
 // For tag-filtered query.
 router.route('/filtered-items')
