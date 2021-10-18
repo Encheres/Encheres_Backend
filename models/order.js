@@ -36,7 +36,7 @@ const orderSchema = new mongoose.Schema({
     item_id: {
         type: mongoose.Schema.Types.ObjectId
     },
-    item_price: {
+    total_price: {
         type: Number,
         required: true,
         validate(value){
@@ -67,18 +67,10 @@ const orderSchema = new mongoose.Schema({
         },
         address: addressSchema
     },
-    payment_id: {
-        type: String,
-        trim: true
-    },
     shipped: {
         type: Boolean,
         required: true,
         default: false
-    },
-    tracking_details: {
-        type: String,
-        trim: true
     }},
     {timestamps: true}
 )
