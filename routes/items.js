@@ -37,8 +37,9 @@ router.route('/filtered-items')
     const page = parseInt(req.query.page || "0");
 
     try{
-        var items = await Item.find({event_start_date_time : { $lte: new Date() }, "categories" : { $in: req.query.tags.split(',')}, sale: true})
-        .sort({'event_start_end_time':1}).limit(PAGE_SIZE).skip(PAGE_SIZE*page);
+        var items = await Item.find({event_start_date_time : { $lte: new Date() },
+        event_end_date_time : { $gte: new Date() }, "categories" : { $in: req.query.tags.split(',')}})
+        .sort({'event_start_end_time':1}).limit(PAGE_SIZE).skip(PAGE_SIZE*page).populate('owner').populate('bidder');
 
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');
@@ -57,8 +58,9 @@ router.route('/items')
     const page = parseInt(req.query.page || "0");
 
     try{
-        var items = await Item.find({ event_start_date_time : { $lte: new Date() }, sale: true})
-        .sort({'event_end_date_time':1}).limit(PAGE_SIZE).skip(PAGE_SIZE*page);
+        var items = await Item.find({ event_start_date_time : { $lte: new Date() }, 
+        event_end_date_time : { $gte: new Date() }})
+        .sort({'event_end_date_time':1}).limit(PAGE_SIZE).skip(PAGE_SIZE*page).populate('owner').populate('bidder');
 
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');
@@ -83,7 +85,7 @@ router.route('/items')
 router.route('/items/:itemId')
 .get(async (req, res, next) => {
     try {
-        var item = await Item.findById(req.params.itemId);
+        var item = await Item.findById(req.params.itemId).populate('owner').populate('bidder');
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');
         res.json(item);
@@ -130,34 +132,16 @@ router.route('/items/:itemId')
 })
 
 // Completed Auctions.
-router.route('/sold-filtered-items')
-.get(async (req, res, next) => {
-
-    const PAGE_SIZE = 5;
-    const page = parseInt(req.query.page || "0");
-
-    try{
-        var items = await Item.find({event_start_date_time : { $lte: new Date() }, "categories" : { $in: req.query.tags.split(',')}, sale: false})
-        .sort({'event_start_end_time':1}).limit(PAGE_SIZE).skip(PAGE_SIZE*page);
-
-        res.statusCode = 200;
-        res.setHeader('Content-Type', 'application/json');
-        res.json(items);
-    }
-    catch (error) {
-        next(error);
-    }
-})
 
 router.route('/sold-items')
-.get(async (req, res, next) => {
+.get(auth, async (req, res, next) => {
 
     const PAGE_SIZE = 4;
     const page = parseInt(req.query.page || "0");
 
     try{
-        var items = await Item.find({event_start_date_time : { $lte: new Date() }, sale: false})
-        .sort({'event_start_end_time':1}).limit(PAGE_SIZE).skip(PAGE_SIZE*page);
+        var items = await Item.find({event_end_date_time : { $lte: new Date() }, bidder: req.user._id})
+        .sort({'event_end_date_time':1}).limit(PAGE_SIZE).skip(PAGE_SIZE*page).populate('owner').populate('bidder');
 
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');
