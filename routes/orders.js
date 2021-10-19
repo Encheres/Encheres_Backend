@@ -6,6 +6,17 @@ const auth = require('../middleware/auth');
 
 // Creating new order.
 router.route('/orders')
+.get(async (req, res, next) => {
+    try {
+        var orders = await Order.find({});
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'application/json');
+        res.json(orders);
+
+    } catch (error) {
+        next(error);
+    }
+})
 .post(auth, async (req, res, next) => {
     try {
 

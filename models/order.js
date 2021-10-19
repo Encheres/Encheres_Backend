@@ -31,14 +31,13 @@ const orderSchema = new mongoose.Schema({
     auction_id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Auction',
-        required: true
     },
     item_id: {
-        type: mongoose.Schema.Types.ObjectId
+        type: mongoose.Schema.Types.ObjectId,
+        required: true
     },
     total_price: {
         type: Number,
-        required: true,
         validate(value){
             if(value < 0)
                 throw new Error("Price Can't be negative")

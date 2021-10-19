@@ -100,8 +100,7 @@ router.route('/items/:itemId')
         var oldItem = await Item.findById(req.params.itemId);
 
         /******** BACKEND AVOIDANCE TO ALLOW ONLY HIGHER BIDS *******/
-        if(req.body.asset.aggregate_base_price <= oldItem.asset.aggregate_base_price){
-
+        if(oldItem.bids==true && req.body.asset.aggregate_base_price <= oldItem.asset.aggregate_base_price){
             err = new Error();
             err.status = 400;
             return next(err);  
@@ -130,6 +129,19 @@ router.route('/items/:itemId')
 	}
 
 })
+.patch(auth, async(req,res)=>{
+	try{
+        var item = await Item.findByIdAndUpdate(req.params.itemId, 
+            {$set: req.body}, 
+            {new: true});
+        
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'application/json');
+        res.json(item);
+	}catch(error){
+		next(error)
+	}
+});
 
 // Completed Auctions.
 
@@ -141,7 +153,7 @@ router.route('/sold-items')
 
     try{
         var items = await Item.find({event_end_date_time : { $lte: new Date() }, bidder: req.user._id})
-        .sort({'event_end_date_time':1}).limit(PAGE_SIZE).skip(PAGE_SIZE*page).populate('owner').populate('bidder');
+        .sort({'event_end_date_time':-1}).limit(PAGE_SIZE).skip(PAGE_SIZE*page).populate('owner').populate('bidder');
 
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');
