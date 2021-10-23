@@ -6,6 +6,17 @@ const auth = require('../middleware/auth');
 
 // Creating new order.
 router.route('/orders')
+.get(async (req, res, next) => {
+    try {
+        var orders = await Order.find({});
+        res.statusCode = 200;
+        res.setHeader('Content-Type', 'application/json');
+        res.json(orders);
+
+    } catch (error) {
+        next(error);
+    }
+})
 .post(auth, async (req, res, next) => {
     try {
 
@@ -59,7 +70,7 @@ router.route('/orders/:orderId')
 })
 
 // pending orders (Buyer side).
-router.route('/buyer-pending-orders/:buyerId')
+router.route('/buyer-pending-orders')
 .get(auth, async (req, res, next) => {
 
     const PAGE_SIZE = 5;
@@ -67,7 +78,7 @@ router.route('/buyer-pending-orders/:buyerId')
 
     try{
         var orders = await Order.find({
-            'buyer_details.profile': req.params.buyerId,
+            'buyer_details.profile': req.user._id,
             'shipped': false
         })
         .sort({'createdAt':-1}).limit(PAGE_SIZE).skip(PAGE_SIZE*page);
@@ -90,7 +101,7 @@ router.route('/seller-pending-orders/:sellerId')
 
     try{
         var orders = await Order.find({
-            'seller_details.profile': req.params.sellerId,
+            'seller_details.profile': req.user._id,
             'shipped': false
         })
         .sort({'createdAt':-1}).limit(PAGE_SIZE).skip(PAGE_SIZE*page);
@@ -105,7 +116,7 @@ router.route('/seller-pending-orders/:sellerId')
 })
 
 // shipped orders (Buyer side).
-router.route('/buyer-shipped-orders/:buyerId')
+router.route('/buyer-shipped-orders')
 .get(auth, async (req, res, next) => {
 
     const PAGE_SIZE = 5;
@@ -113,7 +124,7 @@ router.route('/buyer-shipped-orders/:buyerId')
 
     try{
         var orders = await Order.find({
-            'buyer_details.profile': req.params.buyerId,
+            'buyer_details.profile': req.user._id,
             'shipped': true
         })
         .sort({'createdAt':-1}).limit(PAGE_SIZE).skip(PAGE_SIZE*page);
@@ -128,7 +139,7 @@ router.route('/buyer-shipped-orders/:buyerId')
 })
 
 // shipped orders (Seller side).
-router.route('/seller-shipped-orders/:sellerId')
+router.route('/seller-shipped-orders')
 .get(auth, async (req, res, next) => {
 
     const PAGE_SIZE = 5;
@@ -136,7 +147,7 @@ router.route('/seller-shipped-orders/:sellerId')
 
     try{
         var orders = await Order.find({
-            'seller_details.profile': req.params.sellerId,
+            'seller_details.profile': req.user._id,
             'shipped': true
         })
         .sort({'createdAt':-1}).limit(PAGE_SIZE).skip(PAGE_SIZE*page);

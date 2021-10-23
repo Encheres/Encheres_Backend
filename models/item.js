@@ -55,7 +55,7 @@ const itemSchema = new mongoose.Schema(
         sale: {
             type: Boolean,
             required: true,
-            default: false
+            default: true
         },
         bids: {
             type: Boolean,
