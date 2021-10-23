@@ -1,8 +1,36 @@
 var express = require('express');
 var router = express.Router();
+const mongoose = require('mongoose')
+const Pusher = require('pusher')
 const Auction = require('../models/auction');
 
 const auth = require('../middleware/auth');
+
+const pusher = new Pusher({
+    appId: process.env.PUSHER_APP_ID,
+    key: process.env.PUSHER_KEY,
+    secret: process.env.PUSHER_SECRET,
+    cluster: process.env.PUSHER_APP_CLUSTER,
+    useTLS: true
+});
+
+const db  = mongoose.connection;
+db.once('open', () => {
+    const auctionCollection = db.collection('Auction');
+    const changeStream = auctionCollection.watch();
+      
+    changeStream.on('change', (change) => {
+        if (change.operationType === "update") {
+            const bidDetails = change.fullDocument;
+            console.log(bidDetails);
+            // pusher.trigger("auctions", "updated", { msg: "New Bid added!" });
+        }else{
+            console.log("Pusher Error");
+        }
+    
+    });
+  });
+
 
 // For tag-filtered query.
 router.route('/filtered-auctions')
@@ -55,12 +83,13 @@ router.route('/auctions')
 router.route('/auctions/:auctionId')
     .get(async(req, res, next) => {
         try {
-            var auction = await Auction.findById(req.params.auctionId);
+            var auction = await Auction.findById(req.params.auctionId).populate('organizer', 'name');
             res.statusCode = 200;
             res.setHeader('Content-Type', 'application/json');
             res.json(auction);
 
         } catch (error) {
+            console.log(error);
             next(error);
         }
     })
@@ -140,5 +169,37 @@ router.route('/completed-auctions')
             next(error);
         }
     })
+
+    // used to update bid price.
+router.patch('/auctions/:auctionId/:itemId', async(req,res)=>{
+    try{
+        const auctionId = req.params.auctionId;
+        const itemId = req.params.itemId;
+        const data = req.body;
+        let oldItem = await Auction.findById(auctionId);
+        let index = oldItem.items.findIndex(item => item._id == itemId);
+        if(!oldItem.items[index].bid.price || (parseFloat(oldItem.items[index].bid.price) < parseFloat(data.bid.price))){
+            oldItem.items[index].bid.price = data.bid.price;
+            oldItem.items[index].bid.bidder = data.bid.bidder;
+            oldItem.items[index].bid.bid_date_time = data.date_time;
+            oldItem.chats.push({message_type:'general', message:data.bid.price + " ETH: Competing Bid"});
+            await oldItem.save();
+            pusher.trigger('auctions', 'updated', {
+                msg: 'New Bid added!'
+            });
+            res.status(204).send(oldItem);
+        }
+    }catch(error){
+        console.log(error);
+        res.status(500).send(error);
+    }
+
+})
+
+router.post("/join_auction/:auctionId", auth, async(req, res, next)=>{
+    const auctionId= req.params.auctionId;
+    pusher.trigger()
+
+})
 
 module.exports = router;
