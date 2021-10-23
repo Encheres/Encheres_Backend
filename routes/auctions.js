@@ -178,11 +178,17 @@ router.patch('/auctions/:auctionId/:itemId', async(req,res)=>{
         const data = req.body;
         let oldItem = await Auction.findById(auctionId);
         let index = oldItem.items.findIndex(item => item._id == itemId);
+        const date_time = new Date();
+        
+        if(oldItem.items[index].sell.sold){
+            throw new Error('Item is already sold');
+        }
+
         if(!oldItem.items[index].bid.price || (parseFloat(oldItem.items[index].bid.price) < parseFloat(data.bid.price))){
             oldItem.items[index].bid.price = data.bid.price;
             oldItem.items[index].bid.bidder = data.bid.bidder;
-            oldItem.items[index].bid.bid_date_time = data.date_time;
-            oldItem.chats.push({message_type:'general', message:data.bid.price + " ETH: Competing Bid"});
+            oldItem.items[index].bid.bid_date_time = date_time;
+            oldItem.chats.push({message_type:'general', message:data.bid.price + " ETH: Competing Bid", time:date_time});
             await oldItem.save();
             pusher.trigger('auctions', 'updated', {
                 msg: 'New Bid added!'
@@ -195,6 +201,64 @@ router.patch('/auctions/:auctionId/:itemId', async(req,res)=>{
     }
 
 })
+
+router.patch('/auctions/chats/:auctionId', async(req,res)=>{
+    try{
+        const auctionId = req.params.auctionId;
+        const data = req.body;
+        let oldItem = await Auction.findById(auctionId);
+        const date_time = new Date();
+        oldItem.chats.push({message_type:data.type, message:data.message, time:date_time});
+        await oldItem.save();
+        pusher.trigger('auctions', 'updated', {
+            msg: 'New Notification added!'
+        });
+        res.status(204).send(oldItem);
+
+    }catch(error){
+        console.log(error);
+        res.status(500).send(error);
+    }
+})
+
+router.patch('/auctions/sell/:auctionId/:itemId', async(req,res)=>{
+    try{
+        const auctionId = req.params.auctionId;
+        const itemId = req.params.itemId;
+        const data = req.body;
+        let oldItem = await Auction.findById(auctionId);
+        let index = oldItem.items.findIndex(item => item._id == itemId);
+        const date_time = new Date();
+        const latest_bid = oldItem.items[index].bid;
+        if(oldItem.items[index].sell.sold == false){
+            let bid_time = oldItem.items[index].bid.bid_date_time;
+            let diff = (Date.parse(date_time) - Date.parse(bid_time))/1000;
+            if(diff >=120){ // time for bid timeout
+                oldItem.items[index].sell.sold = true;
+                oldItem.items[index].sell.sold_date_time = date_time;
+                oldItem.items[index].sell.sold_price = latest_bid.price;
+                oldItem.items[index].sell.sold_bidder = latest_bid.bidder.userId;
+                oldItem.bid = null;
+                if(index==oldItem.items.length-1){
+                    oldItem.completed = true;
+                    oldItem.chats=[];
+                }
+                oldItem.chats.push({message_type:'sold', message:oldItem.items[index].name + " sold to "+ oldItem.items[index].bid.bidder.anonymous_name, time:date_time});
+                await oldItem.save();
+                pusher.trigger('auctions', 'updated', {
+                    msg: 'Item Sold'
+                });
+            }
+        }
+        res.status(204).send(oldItem);
+    }catch(error){
+        console.log(error);
+        res.status(500).send(error);
+    }
+
+
+})
+
 
 router.post("/join_auction/:auctionId", auth, async(req, res, next)=>{
     const auctionId= req.params.auctionId;

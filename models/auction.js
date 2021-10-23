@@ -105,6 +105,23 @@ const auctionSchema = new mongoose.Schema(
                     type: Date,
                     default: Date.now
                 }
+            },
+            sell: {
+                sold:{
+                    type: Boolean,
+                    default: false
+                },
+                sold_date_time:{
+                    type: Date,
+                    default: Date.now
+                },
+                sold_price:{
+                    type: Number,
+                },
+                sold_bidder:{
+                    type: mongoose.Schema.Types.ObjectId,
+                    ref: 'User'
+                }
             }
         }],
         chats:[{
