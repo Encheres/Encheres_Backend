@@ -57,6 +57,11 @@ const itemSchema = new mongoose.Schema(
             required: true,
             default: true
         },
+        shipped: {
+            type: Boolean,
+            required: true,
+            default: false
+        },
         bids: {
             type: Boolean,
             required: true,

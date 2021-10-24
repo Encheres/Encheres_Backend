@@ -38,7 +38,7 @@ router.route('/filtered-items')
 
     try{
         var items = await Item.find({event_start_date_time : { $lte: new Date() },
-        event_end_date_time : { $gte: new Date() }, "categories" : { $in: req.query.tags.split(',')}})
+        event_end_date_time : { $gte: new Date() }, sale: true, "categories" : { $in: req.query.tags.split(',')}})
         .sort({'event_start_end_time':1}).limit(PAGE_SIZE).skip(PAGE_SIZE*page).populate('owner').populate('bidder');
 
         res.statusCode = 200;
@@ -59,7 +59,7 @@ router.route('/items')
 
     try{
         var items = await Item.find({ event_start_date_time : { $lte: new Date() }, 
-        event_end_date_time : { $gte: new Date() }})
+        event_end_date_time : { $gte: new Date() },sale: true})
         .sort({'event_end_date_time':1}).limit(PAGE_SIZE).skip(PAGE_SIZE*page).populate('owner').populate('bidder');
 
         res.statusCode = 200;
