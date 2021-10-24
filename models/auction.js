@@ -44,7 +44,7 @@ const auctionSchema = new mongoose.Schema(
         },
         organizer: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "User"
+            ref: 'User'
         },
         completed: {
             type: Boolean,
@@ -87,8 +87,55 @@ const auctionSchema = new mongoose.Schema(
             }],
             video: {
                 type: String
+            },
+            bid:{
+                bidder:{
+                    userId:{
+                    type: mongoose.Schema.Types.ObjectId,
+                    ref: 'User'
+                    },
+                    anonymous_name:{
+                        type: String,
+                    }
+                },
+                price:{
+                    type: Number,
+                },
+                bid_date_time:{
+                    type: Date,
+                    default: Date.now
+                }
+            },
+            sell: {
+                sold:{
+                    type: Boolean,
+                    default: false
+                },
+                sold_date_time:{
+                    type: Date,
+                    default: Date.now
+                },
+                sold_price:{
+                    type: Number,
+                },
+                sold_bidder:{
+                    type: mongoose.Schema.Types.ObjectId,
+                    ref: 'User'
+                }
             }
-        }]
+        }],
+        chats:[{
+            message_type:{
+                type: String,
+            },
+            message:{
+                type:String,
+            },
+            time:{
+                type:Date,
+                default: Date.now
+            },
+        }],
     }, {timestamps: true}
 );
 
