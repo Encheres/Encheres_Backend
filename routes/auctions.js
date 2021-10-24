@@ -228,9 +228,10 @@ router.patch('/auctions/sell/:auctionId/:itemId', async(req,res)=>{
         const data = req.body;
         let oldItem = await Auction.findById(auctionId);
         let index = oldItem.items.findIndex(item => item._id == itemId);
+        console.log(index);
         const date_time = new Date();
         const latest_bid = oldItem.items[index].bid;
-        if(oldItem.items[index].sell.sold == false){
+        if(oldItem.items[index].sell.sold === false){
             let bid_time = oldItem.items[index].bid.bid_date_time;
             let diff = (Date.parse(date_time) - Date.parse(bid_time))/1000;
             if(diff >=120){ // time for bid timeout
@@ -238,7 +239,6 @@ router.patch('/auctions/sell/:auctionId/:itemId', async(req,res)=>{
                 oldItem.items[index].sell.sold_date_time = date_time;
                 oldItem.items[index].sell.sold_price = latest_bid.price;
                 oldItem.items[index].sell.sold_bidder = latest_bid.bidder.userId;
-                oldItem.bid = null;
                 if(index==oldItem.items.length-1){
                     oldItem.completed = true;
                     oldItem.chats=[];
