@@ -22,7 +22,6 @@ db.once('open', () => {
     changeStream.on('change', (change) => {
         if (change.operationType === "update") {
             const bidDetails = change.fullDocument;
-            console.log(bidDetails);
             // pusher.trigger("auctions", "updated", { msg: "New Bid added!" });
         }else{
             console.log("Pusher Error");
@@ -228,9 +227,13 @@ router.patch('/auctions/sell/:auctionId/:itemId', async(req,res)=>{
         const data = req.body;
         let oldItem = await Auction.findById(auctionId);
         let index = oldItem.items.findIndex(item => item._id == itemId);
-        console.log(index);
+        
         const date_time = new Date();
         const latest_bid = oldItem.items[index].bid;
+        if(!latest_bid.bidder.userId){
+            throw new Error('Invalid sell request');
+        }
+        
         if(oldItem.items[index].sell.sold === false){
             let bid_time = oldItem.items[index].bid.bid_date_time;
             let diff = (Date.parse(date_time) - Date.parse(bid_time))/1000;
@@ -252,7 +255,6 @@ router.patch('/auctions/sell/:auctionId/:itemId', async(req,res)=>{
         }
         res.status(204).send(oldItem);
     }catch(error){
-        console.log(error);
         res.status(500).send(error);
     }
 
