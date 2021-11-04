@@ -3,7 +3,7 @@ var router = express.Router();
 const mongoose = require('mongoose')
 const Pusher = require('pusher')
 const Auction = require('../models/auction');
-
+const Order = require('../models/order');
 const auth = require('../middleware/auth');
 
 const pusher = new Pusher({
@@ -248,6 +248,27 @@ router.patch('/auctions/sell/:auctionId/:itemId', async(req,res)=>{
                 }
                 oldItem.chats.push({message_type:'sold', message:oldItem.items[index].name + " sold to "+ oldItem.items[index].bid.bidder.anonymous_name, time:date_time});
                 await oldItem.save();
+                // add item to shipping section
+                let shipping = await Order.findOne({auction_id:auctionId, item_id:itemId});
+                if(!shipping){
+                    shipping = new Order({
+                        auction_id:auctionId,
+                        item_id:itemId,
+                        total_price:oldItem.items[index].sell.sold_price,
+                        seller_details:{
+                            profile: oldItem.organizer,
+                            address: oldItem.pickup_point,
+                            contact: oldItem.organizer_contact
+
+                        },
+                        buyer_details:{
+                            profile: oldItem.items[index].sell.sold_bidder,
+                            
+                        },
+                        shipped:false,
+                    });
+                    await shipping.save();
+                }
                 pusher.trigger('auctions', 'updated', {
                     msg: 'Item Sold'
                 });
