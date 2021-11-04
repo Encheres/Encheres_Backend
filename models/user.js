@@ -39,9 +39,6 @@ const userSchema = new mongoose.Schema(
                 required: true,
 			}
 		],
-		blockchain_user_id: {
-			type: Number
-		},
         reputation:{
             type: Number,
 			trim: true,

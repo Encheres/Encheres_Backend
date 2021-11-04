@@ -93,7 +93,7 @@ router.route('/buyer-pending-orders')
 })
 
 // pending orders (Seller side).
-router.route('/seller-pending-orders/:sellerId')
+router.route('/seller-pending-orders')
 .get(auth, async (req, res, next) => {
 
     const PAGE_SIZE = 5;
@@ -102,9 +102,9 @@ router.route('/seller-pending-orders/:sellerId')
     try{
         var orders = await Order.find({
             'seller_details.profile': req.user._id,
-            'shipped': false
         })
-        .sort({'createdAt':-1}).limit(PAGE_SIZE).skip(PAGE_SIZE*page);
+        .sort({'createdAt':-1})
+        .limit(PAGE_SIZE).skip(PAGE_SIZE*page);
 
         res.statusCode = 200;
         res.setHeader('Content-Type', 'application/json');
