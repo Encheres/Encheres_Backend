@@ -58,16 +58,20 @@ router.route('/orders/:orderId')
         next(error);
     }
 })
-.delete(auth, async (req, res, next) => {
+
+// Delete Order of Particular Item.
+router.route('/orders/:itemId')
+.delete( async (req, res, next) => {
 
     try {
-		var operation = await Order.deleteOne({"_id": req.params.orderId});
+		var operation = await Order.deleteOne({"item_id": req.params.itemId});
 		res.status(200).json(operation);
 	} catch (error) {
 		next(error);
 	}
 
 })
+
 
 // pending orders (Buyer side).
 router.route('/buyer-pending-orders')
