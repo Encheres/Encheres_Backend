@@ -263,7 +263,7 @@ router.patch('/auctions/sell/:auctionId/:itemId', async(req,res)=>{
                         },
                         buyer_details:{
                             profile: oldItem.items[index].sell.sold_bidder,
-                            
+
                         },
                         shipped:false,
                     });
