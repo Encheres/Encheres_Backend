@@ -16,6 +16,8 @@
     "express": "~4.16.1",
     "express-session": "^1.17.2",
     "http-errors": "~1.6.3",
+    "ipfs-api": "^26.1.2",
+    "ipfs-http-client": "^53.0.1",
     "jade": "~1.11.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.0.12",
