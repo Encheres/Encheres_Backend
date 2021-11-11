@@ -17,16 +17,20 @@ const pusher = new Pusher({
 const db = mongoose.connection;
 
 db.once("open", () => {
-    const itemCollection = db.collection("items");
-    const changeStream = itemCollection.watch();
-    changeStream.on("change", (change) => {
-        if (change.operationType === "update") {
-            const bidDetails = change.fullDocument;
-            pusher.trigger("biddings", "updated", { msg: "New Bid added!" });
-        } else {
-            console.log("Pusher error");
-        }
-    });
+    try{
+        const itemCollection = db.collection("items");
+        const changeStream = itemCollection.watch();
+        changeStream.on("change", (change) => {
+            if (change.operationType === "update") {
+                const bidDetails = change.fullDocument;
+                pusher.trigger("biddings", "updated", { msg: "New Bid added!" });
+            } else {
+                console.log("Pusher error");
+            }
+        });
+    }catch(err){
+        console.log(err);
+    }
 });
 
 // For tag-filtered query.

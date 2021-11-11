@@ -25,6 +25,7 @@
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",
     "pusher": "^5.0.0",
+    "truffle": "^5.4.17",
     "validator": "^13.6.0"
   },
   "devDependencies": {

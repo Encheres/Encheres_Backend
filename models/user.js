@@ -39,11 +39,6 @@ const userSchema = new mongoose.Schema(
                 required: true,
 			}
 		],
-        reputation:{
-            type: Number,
-			trim: true,
-            default: 0,
-        },
 		image: {
 			type: String,// url
 		},
@@ -86,16 +81,7 @@ const userSchema = new mongoose.Schema(
                 trim: true,
                 required:true
             }
-        }],
-		bookmarked_auctions: [{
-			// bookmark upcoming auctions
-			
-				auction_id:{
-					type: mongoose.Schema.Types.ObjectId,
-					ref: "Auction"
-				}
-			}
-		],
+        }]
     },{ timestamps: true }
 );
 
