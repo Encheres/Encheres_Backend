@@ -4,3 +4,4 @@
 /mongodb
 /public/assets
 /.gitignore
+/generative_models/.ipynb_checkpoints
