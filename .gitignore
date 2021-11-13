@@ -5,3 +5,4 @@
 /public/assets
 /.gitignore
 /generative_models/.ipynb_checkpoints
+/generative_models/fastApiApp/__pycache__
