@@ -1,7 +1,7 @@
 <h1 align="center">Welcome to Encheres_backend 👋</h1>
 <br/>
 
-# To run this server locally
+# To run MongoDB based server locally
 
 ## Prerequisites
 
@@ -14,8 +14,18 @@
 Now run following commands in the terminal in the root directory of this project:
 <ol>
    <li><code> npm install</code></li>
-   <li><code> npm start</code>. To start the server using nodemon, you can use <code> npm run dev</code> instead</li>
+   <li><code> npm start</code>   To start the server using nodemon, you can use <code> npm run dev</code> instead</li>
 </li>
+
+# To run FastApi Server
+
+## Prerequisites
+
+uvicorn Python Library must be installed
+
+Now go to generative_models/fastApiApp/ directory on Command line and run:
+
+<code>  uvicorn main:app --reload </code>    To start the FastApi Server for serving ML Scripts.
    
 # Link for Frontend repo:
 Frontend: https://github.com/Encheres/Encheres_Frontend <br />
