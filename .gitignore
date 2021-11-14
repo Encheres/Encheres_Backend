@@ -6,3 +6,5 @@
 /.gitignore
 /generative_models/.ipynb_checkpoints
 /generative_models/fastApiApp/__pycache__
+/abis
+/db/database.json
