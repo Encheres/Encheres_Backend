@@ -29,26 +29,3 @@ def generate_literature(model, seed_text, next_words):
         seed_text += " " + output_word
     
     return seed_text
-
-'''if __name__ == '__main__':
-
-    model = load_model('literature-generator.h5', compile=False)
-
-    generated_literature = generate_literature(model, "The Moon Shine was beautiful", 100)
-
-    print(generated_literature)
-    tokenizer = Tokenizer()
-    data = open('./literature-generation/literature-generation.txt', encoding="utf8").read()
-
-    corpus = data.lower().split("\n")
-
-    # Fitting Tokenizer on Corpus.
-    tokenizer.fit_on_texts(corpus)
-    backend.clear_session()
-    
-    print("Loaded!!")
-
-    generated_literature = generate_literature(model, "The Moon Shine was beautiful", 100)
-
-    print(generated_literature)
-    print('success!!')'''
