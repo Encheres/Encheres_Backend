@@ -4,6 +4,8 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const cors = require('cors');
+const JSONdb = require('simple-json-db');
+const local_db = new JSONdb('./db/database.json');
 require("dotenv").config();
 require('./db/mongoose');
 
@@ -18,6 +20,9 @@ var independentItemBiddingRouter = require('./routes/independent_item_current_bi
 var assetFileGenerator = require('./routes/asset_file_generations');
 var ContactUsRouter = require('./routes/contactus');
 const currentAuctionUserRouter = require('./routes/currentAuctionUsers');
+var digitalAuctionRouter = require('./routes/digital_assets_auction');
+const {rescheduleJobs} = require('./routes/digital_assets_auction');
+
 var app = express();
 
 // view engine setup
@@ -30,6 +35,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors());
 
+
 //ROUTERS...
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
@@ -38,9 +44,14 @@ app.use(itemsRouter);
 app.use(orderRouter);
 app.use(biddingRouter);
 app.use(independentItemBiddingRouter);
-app.use(assetFileGenerator)
-app.use('/contactUs', ContactUsRouter)
-app.use('/currentAuction', currentAuctionUserRouter)
+app.use(assetFileGenerator);
+app.use('/contactUs', ContactUsRouter);
+app.use('/currentAuction', currentAuctionUserRouter);
+app.use(digitalAuctionRouter);
+
+
+rescheduleJobs(); // reschedule all digital auction jobs
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
