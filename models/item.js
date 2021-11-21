@@ -3,6 +3,14 @@ const mongoose = require("mongoose");
 
 const itemSchema = new mongoose.Schema(
     {
+        auction_id:{
+            type:mongoose.Schema.Types.ObjectId,
+            ref:"Auction"
+        },
+        item_id:{
+            type:mongoose.Schema.Types.ObjectId,
+            ref:"Auction.items"
+        },
         bidder: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "User"

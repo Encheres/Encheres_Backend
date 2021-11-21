@@ -3,8 +3,8 @@ var router = express.Router();
 const mongoose = require("mongoose");
 const Pusher = require("pusher");
 const Auction = require("../models/auction");
-const Order = require("../models/order");
 const auth = require("../middleware/auth");
+const Item = require("../models/item");
 
 const pusher = new Pusher({
     appId: process.env.PUSHER_APP_ID,
@@ -297,26 +297,42 @@ router.patch("/auctions/sell/:auctionId/:itemId", async (req, res) => {
                 });
                 await oldItem.save();
                 // add item to shipping section
-                let shipping = await Order.findOne({
+                let userOrder = await Item.findOne({
                     auction_id: auctionId,
                     item_id: itemId,
                 });
-                if (!shipping) {
-                    shipping = new Order({
+                
+                if (!userOrder) {
+                    userOrder = new Item({
                         auction_id: auctionId,
                         item_id: itemId,
-                        total_price: oldItem.items[index].sell.sold_price,
-                        seller_details: {
-                            profile: oldItem.organizer,
-                            address: oldItem.pickup_point,
-                            contact: oldItem.organizer_contact,
+                        categories:oldItem.tags,
+                        event_start_date_time:oldItem.createdAt,
+                        event_end_date_time: date_time,
+                        sale:false, 
+                        bids:false,
+                        shipped:false,
+                        owner:oldItem.organizer,
+                        owner_contact: oldItem.organizer_contact,
+                        bidder: oldItem.items[index].sell.sold_bidder,
+                        asset:{
+                            name:oldItem.items[index].name,
+                            quantity:oldItem.items[index].quantity,
+                            aggregate_base_price: oldItem.items[index].sell.sold_price,
+                            description:oldItem.items[index].description,
+                            images:oldItem.items[index].images,
+                            video:oldItem.items[index].video
                         },
-                        buyer_details: {
-                            profile: oldItem.items[index].sell.sold_bidder,
-                        },
-                        shipped: false,
+                        pickup_point:{
+                            addressLine1:oldItem.pickup_point.addressLine1,
+                            addressLine2:oldItem.pickup_point.addressLine2,
+                            city:oldItem.pickup_point.city,
+                            state:oldItem.pickup_point.addressState,
+                            postalCode:oldItem.pickup_point.postalCode,
+                            country:oldItem.pickup_point.country
+                        }
                     });
-                    await shipping.save();
+                    await userOrder.save();
                 }
                 pusher.trigger("auctions", "updated", {
                     msg: "Item Sold",
