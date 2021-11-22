@@ -1,7 +1,35 @@
 from tensorflow.keras.models import load_model
 import numpy as np
 import pickle
+import tensorflow 
+import numpy as np 
+import pandas as pd 
+from collections import Counter
+import random
+import IPython
+from IPython.display import Image, Audio
+import music21
+from music21 import *
+import matplotlib.pyplot as plt 
+from sklearn.model_selection import train_test_split
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import LSTM, Dense, Dropout
+import tensorflow.keras.backend as K
+from tensorflow.keras.optimizers import Adamax
+import matplotlib.pyplot as plt
+import matplotlib.patches as mpatches
+import sys
+import warnings
+warnings.filterwarnings("ignore")
+warnings.simplefilter("ignore")
+np.random.seed(42)
 
+#!pip install music21
+#!apt-get install -y lilypond
+
+def show(music):
+    #IPython.display(Image(str(music.write("lily.png"))))
+    pass
 def chords_n_notes(Snippet):
     Melody = []
     offset = 0 #Incremental
@@ -53,12 +81,18 @@ def Malody_Generator(Note_Count):
         seed = np.insert(seed[0],len(seed[0]),index_N)
         seed = seed[1:]
     #Now, we have music in form or a list of chords and notes and we want to be a midi file.
+    
     Melody = chords_n_notes(Music)
     Melody_midi = stream.Stream(Melody)   
     
-    return Music,Melody_midi
-    
-    #return 0
-print('done')
-Music_notes, Melody = Malody_Generator(100)
-show(Melody)
+    Melody.write('midi','./music-generated/Melody_Generated.mid')
+    return Melody_midi
+
+#print('done')
+#Malody_Generator(100)
+
+Melody = Malody_Generator(100)
+Melody.write('midi','./music-generated/Melody_Generated.mid')
+
+
+#IPython.display.Audio("../input/music-generated-lstm/Melody_Generated 2.wav")

@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from literature_generator_script import *
-
+from music-generate-script import Malody_Generator
 
 app = FastAPI() # Instantiating FastApi App Object.
 
@@ -17,7 +17,6 @@ app.add_middleware(
 )
 
 #Defining Api end-points
-
 @app.get('/')
 def get_root():
     return {"greetings": "Welcome to Encheres AI model's API"}
@@ -31,3 +30,9 @@ def get_generated_literature(seed_text: str, next_words_count: int):
     generated_literature = generate_literature(model, seed_text, next_words_count)
 
     return {"generated_literature": generated_literature}
+
+@app.get('/music-generation')
+def get_music_generation( note_count ):
+    generated_music = Malody_Generator(note_count)
+    print(generated_music)
+    return {"generated_music" : generated_music}
