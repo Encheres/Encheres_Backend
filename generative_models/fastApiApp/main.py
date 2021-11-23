@@ -1,8 +1,12 @@
-from fastapi import FastAPI
+from fastapi import FastAPI 
+from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from literature_generator_script import *
-from music-generate-script import Malody_Generator
-
+from music_generate_script import Malody_Generator
+import ipfsapi
+import requests
+import json
+import os
 app = FastAPI() # Instantiating FastApi App Object.
 
 # Enabling CORS options.
@@ -31,8 +35,22 @@ def get_generated_literature(seed_text: str, next_words_count: int):
 
     return {"generated_literature": generated_literature}
 
-@app.get('/music-generation')
-def get_music_generation( note_count ):
-    generated_music = Malody_Generator(note_count)
-    print(generated_music)
-    return {"generated_music" : generated_music}
+@app.get('/music-generation', responses={200:{"desc":"a mid file found"}})
+def get_music_generation( note_count: int):
+    #f = open('./music-generated/Melody_Generated.mid', "rt")
+    '''with open('./music-generated/text-format.txt','wb') as f:
+        f.write(buffer)
+        response = requests.post('https://ipfs.infura.io:5001/api/v0/add', files=f)
+    '''
+    #p = response.json()
+    #hash = p['Hash']
+    #print(hash)
+    #Melody = Malody_Generator(note_count)
+    #Melody.write('midi','./music-generated/Melody_Generated.mid')
+    path = os.getcwd()
+    file_path = os.path.join(path, "music-generated/Melody_Generated.mid")
+    if os.path.exists(file_path):
+        return FileResponse(file_path, media_type="audio/midi", filename='Melody_Generated.mid')
+    else:
+        return {"result":"no file found"}
+    

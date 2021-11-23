@@ -27,9 +27,6 @@ np.random.seed(42)
 #!pip install music21
 #!apt-get install -y lilypond
 
-def show(music):
-    #IPython.display(Image(str(music.write("lily.png"))))
-    pass
 def chords_n_notes(Snippet):
     Melody = []
     offset = 0 #Incremental
@@ -88,8 +85,6 @@ def Malody_Generator(Note_Count):
     Melody.write('midi','./music-generated/Melody_Generated.mid')
     return Melody_midi
 
-#print('done')
-#Malody_Generator(100)
 
 Melody = Malody_Generator(100)
 Melody.write('midi','./music-generated/Melody_Generated.mid')
