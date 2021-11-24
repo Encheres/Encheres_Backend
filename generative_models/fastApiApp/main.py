@@ -45,8 +45,8 @@ def get_music_generation( note_count: int):
     #p = response.json()
     #hash = p['Hash']
     #print(hash)
-    #Melody = Malody_Generator(note_count)
-    #Melody.write('midi','./music-generated/Melody_Generated.mid')
+    Melody = Malody_Generator(note_count)
+    Melody.write('midi','./music-generated/Melody_Generated.mid')
     path = os.getcwd()
     file_path = os.path.join(path, "music-generated/Melody_Generated.mid")
     if os.path.exists(file_path):
