@@ -309,7 +309,7 @@ router.patch("/auctions/sell/:auctionId/:itemId", async (req, res) => {
                         categories:oldItem.tags,
                         event_start_date_time:oldItem.createdAt,
                         event_end_date_time: date_time,
-                        sale:false, 
+                        sale:true, 
                         bids:false,
                         shipped:false,
                         owner:oldItem.organizer,

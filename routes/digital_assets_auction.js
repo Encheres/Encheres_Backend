@@ -12,6 +12,7 @@ async function endDigitalAssetAuction(job){
     console.log("Executing scheduled job: ");
     try{
         const nftId = job.nftId;
+        console.log(nftId);
         const networkId = await web3.eth.net.getId();
         const auctionDeployedNetwork = AuctionContract.networks[networkId];
         const nftDeployedNetwork = NftAssetContract.networks[networkId];
@@ -33,7 +34,9 @@ async function endDigitalAssetAuction(job){
             nonce: nonce,
             chainId: networkId
         }, process.env.ETHEREUM_ACCOUNT_PRIVATE_KEY);
+
         const receipt = await web3.eth.sendSignedTransaction(signed_tx1.rawTransaction);
+        console.log(receipt);
         const result1 = await auction_contract.methods.GetAuctionDetails(nftId).call();
         const sell_data = {
             nftId: nftId,
@@ -65,7 +68,8 @@ async function endDigitalAssetAuction(job){
 
     }catch(err){
         console.log(err);
-        res.status(500).send(err);
+        throw err;
+        // res.status(500).send(err);
     }
 }
 
